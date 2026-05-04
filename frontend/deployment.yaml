@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hotel-frontend
+  namespace: hotel
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hotel-frontend
+  template:
+    metadata:
+      labels:
+        app: hotel-frontend
+    spec:
+      containers:
+      - name: hotel-frontend
+        image: chiragg619/hotel-frontend:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: REACT_APP_API_URL
+          value: "http://3.86.69.167/api"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hotel-frontend-service
+  namespace: hotel
+spec:
+  selector:
+    app: hotel-frontend
+  ports:
+  - port: 3000
+    targetPort: 3000
+  type: ClusterIP
